@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolHub - Shop</title>
+    <link rel="stylesheet" href="shop.css">
+</head>
+<body>
+    <!-- Navigation & Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo-section">
+                <span class="logo">⚙️ ToolHub</span>
+                <span class="tagline">Premium Tools Marketplace</span>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="#" class="nav-link">Home</a>
+                <a href="#tools" class="nav-link">Tools</a>
+                <a href="#" class="nav-link" onclick="showAbout()">About</a>
+                <a href="#" class="nav-link" onclick="showContact()">Contact</a>
+            </div>
+
+            <div class="nav-icons">
+                <button class="search-btn" onclick="toggleSearch()">🔍</button>
+                <button class="cart-btn" onclick="toggleCart()">
+                    🛒 <span class="cart-count">0</span>
+                </button>
+                <button class="profile-btn" onclick="toggleProfile()">👤</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Bar -->
+    <div id="searchBar" class="search-bar" style="display: none;">
+        <input type="text" id="searchInput" placeholder="Search tools..." onkeyup="searchTools()">
+        <button onclick="toggleSearch()">✕</button>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Your One-Stop Tools Shop</h1>
+            <p>Premium quality tools for every project</p>
+            <button class="cta-btn" onclick="document.getElementById('tools-section').scrollIntoView({behavior: 'smooth'})">
+                Shop Now
+            </button>
+        </div>
+        <div class="hero-image">
+            🔧🔨⚒️🛠️⚙️
+        </div>
+    </section>
+
+    <!-- Shopping Cart Modal -->
+    <div id="cartModal" class="modal" style="display: none;">
+        <div class="modal-content cart-modal">
+            <span class="close" onclick="toggleCart()">&times;</span>
+            <h2>🛒 Shopping Cart</h2>
+            <div id="cartItems" class="cart-items"></div>
+            <div class="cart-summary">
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">$0.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Tax (10%):</span>
+                    <span id="tax">$0.00</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <span id="total">$0.00</span>
+                </div>
+            </div>
+            <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+            <button class="continue-shopping-btn" onclick="toggleCart()">Continue Shopping</button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="modal" style="display: none;">
+        <div class="modal-content checkout-modal">
+            <span class="close" onclick="closeCheckout()">&times;</span>
+            <h2>📦 Checkout</h2>
+            <form id="checkoutForm" onsubmit="submitOrder(event)">
+                <div class="form-row">
+                    <div>
+                        <label>Full Name</label>
+                        <input type="text" required placeholder="John Doe">
+                    </div>
+                    <div>
+                        <label>Email</label>
+                        <input type="email" required placeholder="john@example.com">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Address</label>
+                        <input type="text" required placeholder="123 Main St">
+                    </div>
+                    <div>
+                        <label>City</label>
+                        <input type="text" required placeholder="New York">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Zip Code</label>
+                        <input type="text" required placeholder="10001">
+                    </div>
+                    <div>
+                        <label>Country</label>
+                        <input type="text" required placeholder="United States">
+                    </div>
+                </div>
+
+                <h3>💳 Payment Information</h3>
+
+                <div>
+                    <label>Card Number</label>
+                    <input type="text" required placeholder="1234 5678 9012 3456" pattern="[0-9\s]{19}">
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Expiry Date</label>
+                        <input type="text" required placeholder="MM/YY" pattern="\d{2}/\d{2}">
+                    </div>
+                    <div>
+                        <label>CVV</label>
+                        <input type="text" required placeholder="123" pattern="\d{3}">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div>
+                        <label>Cardholder Name</label>
+                        <input type="text" required placeholder="John Doe">
+                    </div>
+                </div>
+
+                <button type="submit" class="place-order-btn">Place Order - <span id="orderTotal">$0.00</span></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="modal" style="display: none;">
+        <div class="modal-content profile-modal">
+            <span class="close" onclick="toggleProfile()">&times;</span>
+            <h2>👤 My Profile</h2>
+            <div class="profile-info">
+                <p><strong>User:</strong> <span id="userName"></span></p>
+                <p><strong>Total Orders:</strong> 0</p>
+                <p><strong>Member Since:</strong> 2026</p>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <!-- Tools Section -->
+    <section id="tools-section" class="tools-section">
+        <h2 id="tools">Available Tools</h2>
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterTools('all')">All</button>
+            <button class="filter-btn" onclick="filterTools('hand')">Hand Tools</button>
+            <button class="filter-btn" onclick="filterTools('power')">Power Tools</button>
+            <button class="filter-btn" onclick="filterTools('safety')">Safety</button>
+        </div>
+        <div id="toolsGrid" class="tools-grid"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 ToolHub. All rights reserved. | Premium tools for professionals</p>
+    </footer>
+
+    <!-- Success Message -->
+    <div id="successMessage" class="success-message" style="display: none;">
+        ✓ <span id="successText"></span>
+    </div>
+
+    <script src="shop.js"></script>
+</body>
+</html>
